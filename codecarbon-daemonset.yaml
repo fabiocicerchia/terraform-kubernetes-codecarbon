@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: codecarbon
+  labels:
+    app.kubernetes.io/managed-by: kubectl
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: codecarbon
+  namespace: codecarbon
+  labels:
+    app.kubernetes.io/name: codecarbon
+    app.kubernetes.io/instance: codecarbon
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: codecarbon
+      app.kubernetes.io/instance: codecarbon
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: codecarbon
+        app.kubernetes.io/instance: codecarbon
+    spec:
+      hostNetwork: true
+      hostPID: true
+      tolerations:
+      - effect: NoSchedule
+        operator: Exists
+      containers:
+      - name: codecarbon
+        image: codecarbon/codecarbon:latest
+        command:
+        - codecarbon
+        - monitor
+        env:
+        - name: CODECARBON_API_URL
+          value: ""
+        # Uncomment and configure for CodeCarbon Dashboard integration
+        # - name: CODECARBON_EXPERIMENT_ID
+        #   value: "your-experiment-id"
+        # - name: CODECARBON_API_KEY
+        #   value: "your-api-key"
+        # - name: CODECARBON_LOG_LEVEL
+        #   value: "INFO"
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 200m
+            memory: 256Mi
+        volumeMounts:
+        - name: host-proc
+          mountPath: /host/proc
+          readOnly: true
+        - name: host-sys
+          mountPath: /host/sys
+          readOnly: true
+        securityContext:
+          privileged: true
+      volumes:
+      - name: host-proc
+        hostPath:
+          path: /proc
+          type: Directory
+      - name: host-sys
+        hostPath:
+          path: /sys
+          type: Directory
