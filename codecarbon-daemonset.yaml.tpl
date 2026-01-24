@@ -24,8 +24,15 @@ spec:
         app.kubernetes.io/name: codecarbon
         app.kubernetes.io/instance: ${name}
     spec:
+      # TRIVY FINDING: hostNetwork=true - Cannot be fixed
+      # Reason: Required for CodeCarbon to access host network interfaces for accurate energy measurements
       hostNetwork: true
+      # TRIVY FINDING: hostPID=true - Cannot be fixed
+      # Reason: Required for CodeCarbon to access process information for carbon attribution
       hostPID: true
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
       tolerations:
       - effect: NoSchedule
         operator: Exists
@@ -65,8 +72,21 @@ spec:
           mountPath: /host/sys
           readOnly: true
         securityContext:
+          # TRIVY FINDING: privileged=true - Cannot be fixed
+          # Reason: Required for CodeCarbon to access hardware sensors (CPU, GPU, RAM) for energy measurements
           privileged: true
+          # TRIVY FINDING: allowPrivilegeEscalation=true - Cannot be fixed
+          # Reason: Implied by privileged=true, necessary for hardware access
+          allowPrivilegeEscalation: true
+          # TRIVY FINDING: runAsNonRoot=false - Cannot be fixed
+          # Reason: Root access required to read hardware sensors and system metrics
+          runAsNonRoot: false
+          capabilities:
+            drop:
+            - ALL
       volumes:
+      # TRIVY FINDING: hostPath volumes - Cannot be fixed
+      # Reason: CodeCarbon requires direct access to /proc and /sys for reading system metrics and hardware sensors
       - name: host-proc
         hostPath:
           path: /proc

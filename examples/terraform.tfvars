@@ -1,7 +1,6 @@
-enabled          = true
-namespace        = "codecarbon"
-create_namespace = true
-name             = "codecarbon"
+enabled   = true
+namespace = "codecarbon"
+name      = "codecarbon"
 
 # Optional: Configure API integration
 # api_url       = "https://api.codecarbon.io"

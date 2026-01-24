@@ -1,16 +1,16 @@
 locals {
   manifest_content = templatefile("${path.module}/codecarbon-daemonset.yaml.tpl", {
-    name                     = var.name
-    namespace                = var.namespace
-    image                    = var.image
-    api_url                  = var.api_url
-    experiment_id            = var.experiment_id
-    api_key                  = var.api_key
-    extra_env                = var.extra_env
-    resources_requests_cpu   = var.resources.requests.cpu
+    name                      = var.name
+    namespace                 = var.namespace
+    image                     = var.image
+    api_url                   = var.api_url
+    experiment_id             = var.experiment_id
+    api_key                   = var.api_key
+    extra_env                 = var.extra_env
+    resources_requests_cpu    = var.resources.requests.cpu
     resources_requests_memory = var.resources.requests.memory
-    resources_limits_cpu     = var.resources.limits.cpu
-    resources_limits_memory  = var.resources.limits.memory
+    resources_limits_cpu      = var.resources.limits.cpu
+    resources_limits_memory   = var.resources.limits.memory
   })
 
   # Split manifest into separate resources (namespace and daemonset)
@@ -22,9 +22,9 @@ resource "kubectl_manifest" "codecarbon" {
 
   yaml_body = yamlencode(local.manifests[count.index])
 
-  wait = true
+  wait             = true
   wait_for_rollout = true
-  
+
   server_side_apply = true
   force_conflicts   = true
 }

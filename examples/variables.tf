@@ -16,16 +16,10 @@ variable "namespace" {
   default     = "codecarbon"
 }
 
-variable "create_namespace" {
-  description = "Create the namespace if it doesn't exist"
-  type        = bool
-  default     = true
-}
-
 variable "image" {
   description = "Docker image for codecarbon"
   type        = string
-  default     = "codecarbon/codecarbon:latest"
+  default     = "codecarbon/codecarbon:v2.4.1"
 }
 
 variable "api_url" {
@@ -49,12 +43,6 @@ variable "api_key" {
 
 variable "extra_env" {
   description = "Additional environment variables"
-  type        = map(string)
-  default     = {}
-}
-
-variable "labels" {
-  description = "Additional labels to apply to resources"
   type        = map(string)
   default     = {}
 }
