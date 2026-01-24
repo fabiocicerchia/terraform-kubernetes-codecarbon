@@ -1,13 +1,17 @@
 module "codecarbon" {
   source = "../"
 
-  enabled       = var.enabled
-  namespace     = var.namespace
-  name          = var.name
-  image         = var.image
-  api_url       = var.api_url
-  experiment_id = var.experiment_id
-  api_key       = var.api_key
-  extra_env     = var.extra_env
-  resources     = var.resources
+  enabled       = true
+  namespace     = "codecarbon"
+  name          = "codecarbon"
+  
+  # Optional: Configure API integration
+  # api_url       = "https://api.codecarbon.io"
+  # experiment_id = "your-experiment-id"
+  # api_key       = "your-api-key"
+
+  # Optional: Additional environment variables
+  # extra_env = {
+  #   CODECARBON_LOG_LEVEL = "INFO"
+  # }
 }
