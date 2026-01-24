@@ -1,6 +1,20 @@
-# Terraform Kubernetes CodeCarbon Module
+# Terraform Module for CodeCarbon
 
 Terraform module to deploy [CodeCarbon](https://github.com/mlco2/codecarbon) as a DaemonSet on Kubernetes to monitor carbon emissions across all nodes.
+
+## Why This Matters
+
+Every computation has a carbon cost. As organisations commit to net-zero targets and ESG reporting, measuring the actual carbon emissions of compute workloads becomes essential—not just for compliance, but for meaningful reduction.
+
+CodeCarbon makes carbon emissions visible by:
+
+* 🌍 **Quantifying CO₂ emissions** from your infrastructure in real metrics (tons CO₂e)
+* 📊 **Tracking emissions over time** to measure progress toward reduction goals
+* 🔬 **Identifying carbon-intensive workloads** for optimisation
+* 📈 **Supporting ESG reporting** with concrete, measurable data
+* 🎯 **Enabling carbon-aware decisions** in architecture and workload placement
+
+By monitoring carbon emissions alongside performance metrics, teams can optimise for environmental impact—turning sustainability from aspiration into measurable operational practice.
 
 ## Overview
 
@@ -18,7 +32,7 @@ CodeCarbon tracks and estimates the carbon emissions of compute resources. This 
 
 | Name | Version |
 |------|---------|
-| terraform | >= 1.0 |
+| terraform | >= 1.0 or OpenTofu >= 1.6 |
 | kubectl | >= 1.14 |
 
 ## Standalone Usage (Without Terraform)
@@ -29,7 +43,7 @@ You can deploy CodeCarbon directly with kubectl using the provided YAML manifest
 # Deploy with default settings
 kubectl apply -f codecarbon-daemonset.yaml
 
-# Or customize the YAML file first, then apply
+# Or customise the YAML file first, then apply
 kubectl apply -f codecarbon-daemonset.yaml
 ```
 
@@ -179,7 +193,7 @@ These permissions are necessary for accurate carbon measurement but should be re
 
 ## License
 
-MIT License - This is a wrapper module. CodeCarbon itself is licensed under MIT.
+MIT
 
 ## References
 
