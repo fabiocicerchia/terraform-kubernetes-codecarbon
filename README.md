@@ -35,6 +35,37 @@ CodeCarbon tracks and estimates the carbon emissions of compute resources. This 
 | terraform | >= 1.0 or OpenTofu >= 1.6 |
 | kubectl | >= 1.14 |
 
+## Building the Docker Image
+
+The module uses a custom Docker image. To build and push it:
+
+```bash
+# Build the image
+docker build -t fabiocicerchia/codecarbon:latest .
+
+# Push to registry
+docker push fabiocicerchia/codecarbon:latest
+```
+
+Or use a custom image name and tag:
+
+```bash
+IMAGE_NAME="your-registry/codecarbon" TAG="v1.0.0" bash -c '
+  docker build -t "${IMAGE_NAME}:${TAG}" .
+  docker push "${IMAGE_NAME}:${TAG}"
+'
+```
+
+Then configure the module to use your custom image:
+
+```hcl
+module "codecarbon" {
+  source = "./terraform-kubernetes-codecarbon"
+  
+  image = "your-registry/codecarbon:v1.0.0"
+}
+```
+
 ## Standalone Usage (Without Terraform)
 
 You can deploy CodeCarbon directly with kubectl using the provided YAML manifest:
@@ -55,6 +86,8 @@ kubectl delete -f codecarbon-daemonset.yaml
 
 ## Usage with Terraform
 
+This module reads Kubernetes manifests from `codecarbon-daemonset.yaml` and applies variable overrides for `name`, `namespace`, `image`, `api_url`, `experiment_id`, and `api_key`.
+
 ### Basic Example
 
 ```hcl
@@ -62,6 +95,7 @@ module "codecarbon" {
   source = "./terraform-helm-codecarbon"
 
   enabled   = true
+  name      = "codecarbon"
   namespace = "codecarbon"
 }
 ```
@@ -73,6 +107,7 @@ module "codecarbon" {
   source = "./terraform-helm-codecarbon"
 
   enabled       = true
+  name          = "codecarbon"
   namespace     = "codecarbon"
   api_url       = "https://api.codecarbon.io"
   experiment_id = "your-experiment-id"
@@ -80,14 +115,16 @@ module "codecarbon" {
 }
 ```
 
-### Custom Resources
+### Custom Configuration
 
 ```hcl
 module "codecarbon" {
   source = "./terraform-helm-codecarbon"
 
   enabled   = true
+  name      = "my-codecarbon"
   namespace = "monitoring"
+  image     = "codecarbon/codecarbon:v2.4.1"
   
   resources = {
     requests = {
@@ -102,42 +139,23 @@ module "codecarbon" {
 }
 ```
 
-### With Additional Environment Variables
-
-```hcl
-module "codecarbon" {
-  source = "./terraform-helm-codecarbon"
-
-  enabled   = true
-  namespace = "codecarbon"
-  
-  extra_env = {
-    CODECARBON_LOG_LEVEL = "DEBUG"
-    CODECARBON_SAVE_TO_FILE = "true"
-  }
-}
-```
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | enabled | Enable or disable the codecarbon DaemonSet | `bool` | `true` | no |
-| name | Name of the DaemonSet | `string` | `"codecarbon"` | no |
+| name | Name of the DaemonSet and container | `string` | `"codecarbon"` | no |
 | namespace | Kubernetes namespace for codecarbon | `string` | `"codecarbon"` | no |
-| create_namespace | Create the namespace if it doesn't exist | `bool` | `true` | no |
-| image | Docker image for codecarbon | `string` | `"codecarbon/codecarbon:latest"` | no |
+| image | Docker image for codecarbon | `string` | `"codecarbon/codecarbon:v2.4.1"` | no |
 | api_url | CodeCarbon API URL for reporting emissions | `string` | `""` | no |
 | experiment_id | CodeCarbon experiment ID | `string` | `""` | no |
 | api_key | CodeCarbon API key | `string` | `""` | no |
 | extra_env | Additional environment variables | `map(string)` | `{}` | no |
-| labels | Additional labels to apply to resources | `map(string)` | `{}` | no |
 | resources | Resource limits and requests | `object` | See below | no |
 
 Default resources:
 ```hcl
 {
-| manifest_yaml | The rendered YAML manifest (can be used with kubectl apply) |
   requests = {
     cpu    = "100m"
     memory = "128Mi"
@@ -156,16 +174,7 @@ Default resources:
 | namespace | The namespace where codecarbon is deployed |
 | daemonset_name | The name of the codecarbon DaemonSet |
 | enabled | Whether codecarbon is enabled |
-Getting the Rendered Manifest
 
-If you want to see or save the Terraform-rendered YAML manifest:
-
-```bash
-terraform output -raw manifest_yaml > codecarbon-custom.yaml
-kubectl apply -f codecarbon-custom.yaml
-```
-
-## 
 ## CodeCarbon Dashboard
 
 To use the CodeCarbon Dashboard:

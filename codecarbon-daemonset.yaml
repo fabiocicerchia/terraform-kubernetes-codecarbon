@@ -38,7 +38,7 @@ spec:
         operator: Exists
       containers:
       - name: codecarbon
-        image: codecarbon/codecarbon:v2.4.1
+        image: fabiocicerchia/codecarbon:latest
         command:
         - codecarbon
         - monitor
