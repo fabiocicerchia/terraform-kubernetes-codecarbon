@@ -86,13 +86,21 @@ kubectl delete -f codecarbon-daemonset.yaml
 
 ## Usage with Terraform
 
-This module reads Kubernetes manifests from `codecarbon-daemonset.yaml` and applies variable overrides for `name`, `namespace`, `image`, `api_url`, `experiment_id`, and `api_key`.
+This module deploys CodeCarbon as a DaemonSet with configuration stored in a Kubernetes Secret. The Secret contains a `.codecarbon.config` file that is mounted into the container.
+
+### Configuration Method
+
+The module uses a Secret-based configuration approach:
+- Configuration is stored in a Kubernetes Secret as `.codecarbon.config`
+- The Secret is mounted into the DaemonSet at `/root/.codecarbon.config`
+- CodeCarbon reads this configuration file automatically
+- This approach is more secure and cleaner than using individual environment variables
 
 ### Basic Example
 
 ```hcl
 module "codecarbon" {
-  source = "./terraform-helm-codecarbon"
+  source = "./terraform-kubernetes-codecarbon"
 
   enabled   = true
   name      = "codecarbon"
@@ -104,14 +112,16 @@ module "codecarbon" {
 
 ```hcl
 module "codecarbon" {
-  source = "./terraform-helm-codecarbon"
+  source = "./terraform-kubernetes-codecarbon"
 
-  enabled       = true
-  name          = "codecarbon"
-  namespace     = "codecarbon"
-  api_url       = "https://api.codecarbon.io"
-  experiment_id = "your-experiment-id"
-  api_key       = "your-api-key"
+  enabled         = true
+  name            = "codecarbon"
+  namespace       = "codecarbon"
+  api_endpoint    = "https://api.codecarbon.io"
+  organization_id = "your-organization-id"
+  project_id      = "your-project-id"
+  experiment_id   = "your-experiment-id"
+  api_key         = "your-api-key"
 }
 ```
 
@@ -119,26 +129,14 @@ module "codecarbon" {
 
 ```hcl
 module "codecarbon" {
-  source = "./terraform-helm-codecarbon"
+  source = "./terraform-kubernetes-codecarbon"
 
   enabled   = true
   name      = "my-codecarbon"
   namespace = "monitoring"
-  image     = "codecarbon/codecarbon:v2.4.1"
-  
-  resources = {
-    requests = {
-      cpu    = "50m"
-      memory = "64Mi"
-    }
-    limits = {
-      cpu    = "500m"
-      memory = "512Mi"
-    }
-  }
+  image     = "fabiocicerchia/codecarbon:latest"
 }
 ```
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -146,26 +144,12 @@ module "codecarbon" {
 | enabled | Enable or disable the codecarbon DaemonSet | `bool` | `true` | no |
 | name | Name of the DaemonSet and container | `string` | `"codecarbon"` | no |
 | namespace | Kubernetes namespace for codecarbon | `string` | `"codecarbon"` | no |
-| image | Docker image for codecarbon | `string` | `"codecarbon/codecarbon:v2.4.1"` | no |
-| api_url | CodeCarbon API URL for reporting emissions | `string` | `""` | no |
+| image | Docker image for codecarbon | `string` | `"fabiocicerchia/codecarbon:latest"` | no |
+| api_endpoint | CodeCarbon API endpoint URL | `string` | `"https://api.codecarbon.io"` | no |
+| organization_id | CodeCarbon organization ID | `string` | `""` | no |
+| project_id | CodeCarbon project ID | `string` | `""` | no |
 | experiment_id | CodeCarbon experiment ID | `string` | `""` | no |
-| api_key | CodeCarbon API key | `string` | `""` | no |
-| extra_env | Additional environment variables | `map(string)` | `{}` | no |
-| resources | Resource limits and requests | `object` | See below | no |
-
-Default resources:
-```hcl
-{
-  requests = {
-    cpu    = "100m"
-    memory = "128Mi"
-  }
-  limits = {
-    cpu    = "200m"
-    memory = "256Mi"
-  }
-}
-```
+| api_key | CodeCarbon API key (sensitive) | `string` | `""` | no |
 
 ## Outputs
 
@@ -177,12 +161,117 @@ Default resources:
 
 ## CodeCarbon Dashboard
 
-To use the CodeCarbon Dashboard:
+To use the CodeCarbon Dashboard for tracking emissions data, you need to configure the following settings which are stored in a Kubernetes Secret.
 
-1. Create an account at [https://dashboard.codecarbon.io](https://dashboard.codecarbon.io)
-2. Create an experiment to get your `experiment_id`
-3. Generate an API key
-4. Configure the module with these credentials
+### Configuration Secret
+
+The module creates a Kubernetes Secret containing a `.codecarbon.config` file with the following structure:
+
+```ini
+[codecarbon]
+api_endpoint = https://api.codecarbon.io
+organization_id = <your-organization-id>
+project_id = <your-project-id>
+experiment_id = <your-experiment-id>
+api_key = <your-api-key>
+```
+
+This configuration file is automatically mounted into the DaemonSet at `/root/.codecarbon.config` and is used by CodeCarbon to authenticate and report emissions data to the dashboard.
+
+### Setting Up CodeCarbon Dashboard
+
+### 1. Install CodeCarbon CLI
+
+```bash
+pip install codecarbon
+```
+
+### 2. Authenticate with CodeCarbon
+
+```bash
+codecarbon login
+```
+
+This will open your browser to complete authentication. Once successful, you'll see:
+```
+Successfully authenticated Getting a token...
+```
+
+### 3. Configure CodeCarbon
+
+Run the interactive configuration wizard:
+
+```bash
+codecarbon config
+```
+
+The wizard will guide you through:
+- Creating/selecting an organization
+- Creating/selecting a project
+- Creating/selecting an experiment
+- Configuring location settings (country, region)
+
+Example configuration session:
+```
+Welcome to CodeCarbon configuration wizard
+Creating new config file
+Where do you want to put your config file ? [~/.codecarbon.config]: 
+Config file created at /home/user/.codecarbon.config
+Current API endpoint is https://api.codecarbon.io. Press enter to continue or input other url [https://api.codecarbon.io]: 
+? Pick existing organization from list or Create new organization ? Your Organization
+? Pick existing project from list or Create new project ? Your Project
+? Pick existing experiment from list or Create new experiment ? Create New Experiment
+Creating new experiment
+Experiment name : [Code Carbon user test]: My K8s Cluster
+Experiment description : [Code Carbon user test ]: Carbon emissions from production cluster
+Is this experiment running on the cloud ? [y/n]: n
+Country name : [Auto]: US
+Country ISO code : [Auto]: US
+Region : [Auto]: US-CA
+[...]
+```
+
+### 4. Get Your Credentials
+
+After configuration, you can find your credentials:
+
+**From the CLI configuration file** (`~/.codecarbon.config`):
+```bash
+cat ~/.codecarbon.config
+```
+
+The file contains:
+- `organization_id` - Your organization identifier
+- `project_id` - Your project identifier  
+- `experiment_id` - Your experiment identifier
+- `api_key` - Your authentication key
+
+**From the Dashboard**:
+1. Go to [https://dashboard.codecarbon.io](https://dashboard.codecarbon.io)
+2. Navigate to your experiment
+3. Copy the `organization_id`, `project_id`, and `experiment_id`
+4. Generate an API key if needed
+
+### 5. Configure the Module
+
+Use the credentials in your Terraform configuration:
+
+```hcl
+module "codecarbon" {
+  source = "./terraform-kubernetes-codecarbon"
+
+  enabled         = true
+  api_endpoint    = "https://api.codecarbon.io"
+  organization_id = "your-organization-id"
+  project_id      = "your-project-id"
+  experiment_id   = "your-experiment-id"
+  api_key         = "your-api-key"
+}
+```
+
+Your emissions data will now be sent to the CodeCarbon Dashboard for visualization and analysis.
+
+Your emissions data will now be sent to the CodeCarbon Dashboard for visualization and analysis.
 
 ## Security Considerations
 

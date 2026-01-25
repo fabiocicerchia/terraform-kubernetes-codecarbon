@@ -22,8 +22,20 @@ variable "image" {
   default     = "fabiocicerchia/codecarbon:latest"
 }
 
-variable "api_url" {
-  description = "CodeCarbon API URL for reporting emissions"
+variable "api_endpoint" {
+  description = "CodeCarbon API endpoint URL"
+  type        = string
+  default     = "https://api.codecarbon.io"
+}
+
+variable "organization_id" {
+  description = "CodeCarbon organization ID"
+  type        = string
+  default     = ""
+}
+
+variable "project_id" {
+  description = "CodeCarbon project ID"
   type        = string
   default     = ""
 }

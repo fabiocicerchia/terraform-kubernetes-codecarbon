@@ -5,6 +5,21 @@ metadata:
   labels:
     app.kubernetes.io/managed-by: kubectl
 ---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: codecarbon-config
+  namespace: codecarbon
+type: Opaque
+stringData:
+  .codecarbon.config: |
+    [codecarbon]
+    api_endpoint = https://api.codecarbon.io
+    organization_id = 
+    project_id = 
+    experiment_id = 
+    api_key = 
+---
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
@@ -39,19 +54,10 @@ spec:
       containers:
       - name: codecarbon
         image: fabiocicerchia/codecarbon:latest
+        imagePullPolicy: IfNotPresent
         command:
         - codecarbon
         - monitor
-        env:
-        - name: CODECARBON_API_URL
-          value: ""
-        # Uncomment and configure for CodeCarbon Dashboard integration
-        # - name: CODECARBON_EXPERIMENT_ID
-        #   value: "your-experiment-id"
-        # - name: CODECARBON_API_KEY
-        #   value: "your-api-key"
-        # - name: CODECARBON_LOG_LEVEL
-        #   value: "INFO"
         resources:
           requests:
             cpu: 100m
@@ -60,6 +66,10 @@ spec:
             cpu: 200m
             memory: 256Mi
         volumeMounts:
+        - name: codecarbon-config
+          mountPath: /root/.codecarbon.config
+          subPath: .codecarbon.config
+          readOnly: true
         - name: host-proc
           mountPath: /host/proc
           readOnly: true
@@ -80,6 +90,10 @@ spec:
             drop:
             - ALL
       volumes:
+      - name: codecarbon-config
+        secret:
+          secretName: codecarbon-config
+          defaultMode: 0400
       # TRIVY FINDING: hostPath volumes - Cannot be fixed
       # Reason: CodeCarbon requires direct access to /proc and /sys for reading system metrics and hardware sensors
       - name: host-proc

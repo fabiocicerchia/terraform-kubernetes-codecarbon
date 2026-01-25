@@ -16,7 +16,7 @@ module "codecarbon" {
   namespace = "codecarbon"
   name      = "codecarbon"
 
-  api_url       = "https://api.codecarbon.io"
+  api_endpoint  = "https://api.codecarbon.io"
   experiment_id = "your-experiment-id"
   api_key       = "your-api-key"
 }

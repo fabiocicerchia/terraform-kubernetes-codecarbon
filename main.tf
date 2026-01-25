@@ -9,33 +9,31 @@ locals {
     if trimspace(doc) != ""
   }
 
-  # Extract the original DaemonSet for easier reference
+  # Extract the original DaemonSet and Secret for easier reference
   daemonset_key = [for k in keys(local.manifests) : k if startswith(k, "DaemonSet-")][0]
   daemonset     = local.manifests[local.daemonset_key]
+  secret_key    = [for k in keys(local.manifests) : k if startswith(k, "Secret-")][0]
+  secret        = local.manifests[local.secret_key]
 
-  # Build updated environment variables
-  updated_env = concat(
-    [
-      for env in local.daemonset.spec.template.spec.containers[0].env :
-      env.name == "CODECARBON_API_URL" ? merge(env, { value = var.api_url }) :
-      env.name == "CODECARBON_EXPERIMENT_ID" ? merge(env, { value = var.experiment_id }) :
-      env.name == "CODECARBON_API_KEY" ? merge(env, { value = var.api_key }) :
-      env
-    ],
-    # Only add env vars if they don't already exist and have non-empty values
-    !contains([for env in local.daemonset.spec.template.spec.containers[0].env : env.name], "CODECARBON_API_URL") && var.api_url != "" ? [{
-      name  = "CODECARBON_API_URL"
-      value = var.api_url
-    }] : [],
-    !contains([for env in local.daemonset.spec.template.spec.containers[0].env : env.name], "CODECARBON_EXPERIMENT_ID") && var.experiment_id != "" ? [{
-      name  = "CODECARBON_EXPERIMENT_ID"
-      value = var.experiment_id
-    }] : [],
-    !contains([for env in local.daemonset.spec.template.spec.containers[0].env : env.name], "CODECARBON_API_KEY") && var.api_key != "" ? [{
-      name  = "CODECARBON_API_KEY"
-      value = var.api_key
-    }] : []
-  )
+  # Build CodeCarbon configuration file content
+  codecarbon_config = <<-EOT
+    [codecarbon]
+    api_endpoint = ${var.api_endpoint}
+    organization_id = ${var.organization_id}
+    project_id = ${var.project_id}
+    experiment_id = ${var.experiment_id}
+    api_key = ${var.api_key}
+  EOT
+
+  # Updated Secret with configuration
+  updated_secret = merge(local.secret, {
+    metadata = merge(local.secret.metadata, {
+      namespace = var.namespace
+    })
+    stringData = {
+      ".codecarbon.config" = local.codecarbon_config
+    }
+  })
 
   # Updated DaemonSet with variable overrides
   updated_daemonset = merge(local.daemonset, {
@@ -62,7 +60,6 @@ locals {
             merge(local.daemonset.spec.template.spec.containers[0], {
               name  = var.name
               image = var.image
-              env   = local.updated_env
             })
           ]
         })
@@ -81,6 +78,9 @@ locals {
   final_manifests = merge(
     {
       "Namespace-${var.namespace}" = local.updated_namespace
+    },
+    {
+      "${local.secret_key}" = local.updated_secret
     },
     {
       "${local.daemonset_key}" = local.updated_daemonset
