@@ -89,7 +89,7 @@ locals {
 }
 
 resource "kubectl_manifest" "codecarbon" {
-  for_each = var.enabled ? local.final_manifests : tomap({})
+  for_each = var.enabled ? nonsensitive(local.final_manifests) : tomap({})
 
   yaml_body = yamlencode(each.value)
 
