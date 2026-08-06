@@ -15,10 +15,10 @@ stringData:
   .codecarbon.config: |
     [codecarbon]
     api_endpoint = https://api.codecarbon.io
-    organization_id = 
-    project_id = 
-    experiment_id = 
-    api_key = 
+    organization_id =
+    project_id =
+    experiment_id =
+    api_key =
 ---
 apiVersion: apps/v1
 kind: DaemonSet
