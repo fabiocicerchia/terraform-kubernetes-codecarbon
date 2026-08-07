@@ -61,7 +61,7 @@ Then configure the module to use your custom image:
 ```hcl
 module "codecarbon" {
   source = "./terraform-kubernetes-codecarbon"
-  
+
   image = "your-registry/codecarbon:v1.0.0"
 }
 ```
@@ -215,9 +215,9 @@ Example configuration session:
 ```
 Welcome to CodeCarbon configuration wizard
 Creating new config file
-Where do you want to put your config file ? [~/.codecarbon.config]: 
+Where do you want to put your config file ? [~/.codecarbon.config]:
 Config file created at /home/user/.codecarbon.config
-Current API endpoint is https://api.codecarbon.io. Press enter to continue or input other url [https://api.codecarbon.io]: 
+Current API endpoint is https://api.codecarbon.io. Press enter to continue or input other url [https://api.codecarbon.io]:
 ? Pick existing organization from list or Create new organization ? Your Organization
 ? Pick existing project from list or Create new project ? Your Project
 ? Pick existing experiment from list or Create new experiment ? Create New Experiment
@@ -242,7 +242,7 @@ cat ~/.codecarbon.config
 
 The file contains:
 - `organization_id` - Your organization identifier
-- `project_id` - Your project identifier  
+- `project_id` - Your project identifier
 - `experiment_id` - Your experiment identifier
 - `api_key` - Your authentication key
 
