@@ -8,11 +8,11 @@ Every computation has a carbon cost. As organisations commit to net-zero targets
 
 CodeCarbon makes carbon emissions visible by:
 
-* 🌍 **Quantifying CO₂ emissions** from your infrastructure in real metrics (tons CO₂e)
-* 📊 **Tracking emissions over time** to measure progress toward reduction goals
-* 🔬 **Identifying carbon-intensive workloads** for optimisation
-* 📈 **Supporting ESG reporting** with concrete, measurable data
-* 🎯 **Enabling carbon-aware decisions** in architecture and workload placement
+- 🌍 **Quantifying CO₂ emissions** from your infrastructure in real metrics (tons CO₂e)
+- 📊 **Tracking emissions over time** to measure progress toward reduction goals
+- 🔬 **Identifying carbon-intensive workloads** for optimisation
+- 📈 **Supporting ESG reporting** with concrete, measurable data
+- 🎯 **Enabling carbon-aware decisions** in architecture and workload placement
 
 By monitoring carbon emissions alongside performance metrics, teams can optimise for environmental impact—turning sustainability from aspiration into measurable operational practice.
 
@@ -30,10 +30,10 @@ CodeCarbon tracks and estimates the carbon emissions of compute resources. This 
 
 ## Requirements
 
-| Name | Version |
-|------|---------|
+| Name      | Version                   |
+| --------- | ------------------------- |
 | terraform | >= 1.0 or OpenTofu >= 1.6 |
-| kubectl | >= 1.14 |
+| kubectl   | >= 1.14                   |
 
 ## Building the Docker Image
 
@@ -91,6 +91,7 @@ This module deploys CodeCarbon as a DaemonSet with configuration stored in a Kub
 ### Configuration Method
 
 The module uses a Secret-based configuration approach:
+
 - Configuration is stored in a Kubernetes Secret as `.codecarbon.config`
 - The Secret is mounted into the DaemonSet at `/root/.codecarbon.config`
 - CodeCarbon reads this configuration file automatically
@@ -137,27 +138,28 @@ module "codecarbon" {
   image     = "fabiocicerchia/codecarbon:latest"
 }
 ```
+
 ## Inputs
 
-| Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
-| enabled | Enable or disable the codecarbon DaemonSet | `bool` | `true` | no |
-| name | Name of the DaemonSet and container | `string` | `"codecarbon"` | no |
-| namespace | Kubernetes namespace for codecarbon | `string` | `"codecarbon"` | no |
-| image | Docker image for codecarbon | `string` | `"fabiocicerchia/codecarbon:latest"` | no |
-| api_endpoint | CodeCarbon API endpoint URL | `string` | `"https://api.codecarbon.io"` | no |
-| organization_id | CodeCarbon organization ID | `string` | `""` | no |
-| project_id | CodeCarbon project ID | `string` | `""` | no |
-| experiment_id | CodeCarbon experiment ID | `string` | `""` | no |
-| api_key | CodeCarbon API key (sensitive) | `string` | `""` | no |
+| Name            | Description                                | Type     | Default                              | Required |
+| --------------- | ------------------------------------------ | -------- | ------------------------------------ | :------: |
+| enabled         | Enable or disable the codecarbon DaemonSet | `bool`   | `true`                               | no       |
+| name            | Name of the DaemonSet and container        | `string` | `"codecarbon"`                       | no       |
+| namespace       | Kubernetes namespace for codecarbon        | `string` | `"codecarbon"`                       | no       |
+| image           | Docker image for codecarbon                | `string` | `"fabiocicerchia/codecarbon:latest"` | no       |
+| api_endpoint    | CodeCarbon API endpoint URL                | `string` | `"https://api.codecarbon.io"`        | no       |
+| organization_id | CodeCarbon organization ID                 | `string` | `""`                                 | no       |
+| project_id      | CodeCarbon project ID                      | `string` | `""`                                 | no       |
+| experiment_id   | CodeCarbon experiment ID                   | `string` | `""`                                 | no       |
+| api_key         | CodeCarbon API key (sensitive)             | `string` | `""`                                 | no       |
 
 ## Outputs
 
-| Name | Description |
-|------|-------------|
-| namespace | The namespace where codecarbon is deployed |
-| daemonset_name | The name of the codecarbon DaemonSet |
-| enabled | Whether codecarbon is enabled |
+| Name           | Description                                |
+| -------------- | ------------------------------------------ |
+| namespace      | The namespace where codecarbon is deployed |
+| daemonset_name | The name of the codecarbon DaemonSet       |
+| enabled        | Whether codecarbon is enabled              |
 
 ## CodeCarbon Dashboard
 
@@ -193,7 +195,8 @@ codecarbon login
 ```
 
 This will open your browser to complete authentication. Once successful, you'll see:
-```
+
+```text
 Successfully authenticated Getting a token...
 ```
 
@@ -206,13 +209,15 @@ codecarbon config
 ```
 
 The wizard will guide you through:
+
 - Creating/selecting an organization
 - Creating/selecting a project
 - Creating/selecting an experiment
 - Configuring location settings (country, region)
 
 Example configuration session:
-```
+
+```text
 Welcome to CodeCarbon configuration wizard
 Creating new config file
 Where do you want to put your config file ? [~/.codecarbon.config]:
@@ -236,21 +241,24 @@ Region : [Auto]: US-CA
 After configuration, you can find your credentials:
 
 **From the CLI configuration file** (`~/.codecarbon.config`):
+
 ```bash
 cat ~/.codecarbon.config
 ```
 
 The file contains:
+
 - `organization_id` - Your organization identifier
 - `project_id` - Your project identifier
 - `experiment_id` - Your experiment identifier
 - `api_key` - Your authentication key
 
 **From the Dashboard**:
+
 1. Go to [https://dashboard.codecarbon.io](https://dashboard.codecarbon.io)
-2. Navigate to your experiment
-3. Copy the `organization_id`, `project_id`, and `experiment_id`
-4. Generate an API key if needed
+1. Navigate to your experiment
+1. Copy the `organization_id`, `project_id`, and `experiment_id`
+1. Generate an API key if needed
 
 ### 5. Configure the Module
 
@@ -276,6 +284,7 @@ Your emissions data will now be sent to the CodeCarbon Dashboard for visualizati
 ## Security Considerations
 
 This DaemonSet requires:
+
 - **Privileged mode**: To access host metrics
 - **Host network and PID**: For accurate resource monitoring
 - **Host path mounts**: `/proc` and `/sys` for system information
