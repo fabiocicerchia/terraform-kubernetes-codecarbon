@@ -80,10 +80,10 @@ locals {
       "Namespace-${var.namespace}" = local.updated_namespace
     },
     {
-      "${local.secret_key}" = local.updated_secret
+      (local.secret_key) = local.updated_secret
     },
     {
-      "${local.daemonset_key}" = local.updated_daemonset
+      (local.daemonset_key) = local.updated_daemonset
     }
   )
 }
