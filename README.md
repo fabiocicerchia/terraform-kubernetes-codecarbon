@@ -142,7 +142,7 @@ module "codecarbon" {
 ## Inputs
 
 | Name            | Description                                | Type     | Default                              | Required |
-| --------------- | ------------------------------------------ | -------- | ------------------------------------ | :------: |
+| --------------- | ------------------------------------------ | -------- | ------------------------------------ | -------- |
 | enabled         | Enable or disable the codecarbon DaemonSet | `bool`   | `true`                               | no       |
 | name            | Name of the DaemonSet and container        | `string` | `"codecarbon"`                       | no       |
 | namespace       | Kubernetes namespace for codecarbon        | `string` | `"codecarbon"`                       | no       |
