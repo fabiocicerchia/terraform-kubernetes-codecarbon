@@ -25,7 +25,7 @@ CodeCarbon tracks and estimates the carbon emissions of compute resources. This 
 - **DaemonSet Deployment**: Runs on all cluster nodes for complete coverage
 - **Host Access**: Mounts `/proc` and `/sys` for accurate resource monitoring
 - **API Integration**: Optional integration with CodeCarbon Dashboard
-- **Configurable Resources**: Customizable CPU and memory limits
+- **Bounded Resources**: requests 100m/128Mi, limits 200m/256Mi, set in the DaemonSet manifest
 - **Tolerations**: Runs on all nodes including tainted ones
 
 ## Requirements
