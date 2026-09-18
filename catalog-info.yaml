@@ -1,0 +1,22 @@
+# Backstage catalog entry, read by paved's scorecard plugin.
+#
+# Every check paved scores is derived from this file alone — no cluster
+# access, no CI credentials. What is absent here is absent from the score.
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: terraform-kubernetes-codecarbon
+  description: >-
+      Terraform module to deploy CodeCarbon as a DaemonSet on Kubernetes to monitor carbon emissions
+      across all nodes.
+  annotations:
+    github.com/project-slug: fabiocicerchia/terraform-kubernetes-codecarbon
+    backstage.io/source-location: url:https://github.com/fabiocicerchia/terraform-kubernetes-codecarbon/
+  links:
+    - url: https://github.com/fabiocicerchia/terraform-kubernetes-codecarbon
+      title: Source
+spec:
+  type: library
+  lifecycle: production
+  owner: group:default/kodebeat
+  system: oss-tools
