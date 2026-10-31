@@ -11,7 +11,7 @@ name: boneyard-scan
 on:
   push:
     branches: [main]
-    paths: ["main.tf"]
+    paths: ["versions.tf"]
   schedule:
     - cron: "41 5 * * 1"
   workflow_dispatch:
@@ -35,7 +35,7 @@ jobs:
       - id: depwatch
         uses: fabiocicerchia/depwatch@30cde77c2137028bf82a6a9587e5094686ba0d1a # v1.6.6
         with:
-          manifest: main.tf
+          manifest: versions.tf
           eco: terraform
           json: depwatch.json
           # Recording, not gating. depwatch.yml is where a threshold belongs.
