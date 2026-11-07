@@ -7,7 +7,7 @@ Feature: Choosing the namespace for the monitoring stack
     Given the operator sets namespace to <namespace>
     When the operator applies the configuration
     Then a namespace named <created> exists
-    And the CodeCarbon agent and its configuration Secret run in <created>
+    And the CodeCarbon agent and its configuration Secret are placed in <created>
     And the namespace output is <created>
 
     Examples:

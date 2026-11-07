@@ -28,7 +28,8 @@ Feature: Running the repository's standard make verbs
     Given tflint is not installed on the contributor's machine
     When the contributor runs make analyze
     Then the error "analyze needs tflint: https://github.com/terraform-linters/tflint" is printed
-    And the command exits with status 69
+    And make reports that the analyze step failed with error 69
+    And the command exits with a non-zero status
     And no lint findings are reported
 
   @id:developer-tooling.task-commands.004 @rule:tooling.make.test-validates-module-and-example @inferred @source:Makefile#test

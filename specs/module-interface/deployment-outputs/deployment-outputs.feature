@@ -24,8 +24,8 @@ Feature: Reporting what was deployed
     Given the deployment is disabled
     When the operator applies the configuration
     Then the enabled output is false
-    And the daemonset_name output is empty
-    And the manifest_yaml output is empty
+    And the daemonset_name output is null
+    And the manifest_yaml output is null
 
   @id:module-interface.deployment-outputs.003 @rule:module.outputs.namespace-reported-when-disabled @inferred @source:outputs.tf#namespace @questionable
   Scenario: The namespace is reported even when nothing is deployed
