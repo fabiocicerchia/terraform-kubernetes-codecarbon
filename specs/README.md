@@ -14,15 +14,14 @@ Connecting the agent to the CodeCarbon service so emissions are tracked against 
 
 - **API connection**: [Connecting the agent to a CodeCarbon API](carbon-reporting/api-connection/api-connection.feature) (1)
 - **Credentials**: [Protecting the CodeCarbon API key](carbon-reporting/credentials/api-credentials.feature) (1)
-- **Tracking scope**: [Configuring carbon reporting](carbon-reporting/tracking-scope/configuring-carbon-reporting.feature) (2), [Attributing measurements to an organization, project and experiment](carbon-reporting/tracking-scope/tracking-scope.feature) (1)
+- **Tracking scope**: [Configuring carbon reporting](carbon-reporting/tracking-scope/configuring-carbon-reporting.feature) (1), [Attributing measurements to an organization, project and experiment](carbon-reporting/tracking-scope/tracking-scope.feature) (1)
 
 ## Cluster Deployment
 Rolling the CodeCarbon monitoring agent out to every node of a Kubernetes cluster.
 
 - **Enable toggle**: [Switching the CodeCarbon deployment on or off](cluster-deployment/enable-toggle/enable-toggle.feature) (1)
 - **Namespace placement**: [Choosing the namespace for the monitoring stack](cluster-deployment/namespace-placement/namespace-placement.feature) (1)
-- **Naming and labels**: [Naming the CodeCarbon agent](cluster-deployment/naming-and-labels/agent-naming.feature) (1)
-- **Node agent rollout**: [Deploying the CodeCarbon agent to a cluster](cluster-deployment/node-agent-rollout/deploying-codecarbon-agent.feature) (3)
+- **Node agent rollout**: [Deploying the CodeCarbon agent to a cluster](cluster-deployment/node-agent-rollout/deploying-codecarbon-agent.feature) (1)
 
 ## Developer Tooling
 Local commands and quality gates for maintaining the module.

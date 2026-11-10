@@ -18,10 +18,3 @@ Feature: Configuring carbon reporting
       | endpoint                   | org      | project      | experiment  |
       | https://api.codecarbon.io  | org_acme | proj_cluster | exp_prod    |
       | https://carbon.example.com | org_acme | proj_cluster | exp_staging |
-
-  @id:carbon-reporting.tracking-scope.002 @rule:carbon-reporting.api-connection.defaults-to-public-service @inferred @source:main.tf#locals
-  Scenario: Without any reporting settings the agent points at the public CodeCarbon API with an empty scope
-    Given the operator sets no API endpoint, organization, project, experiment or API key
-    When the operator applies the configuration
-    Then the configuration file lists api_endpoint = https://api.codecarbon.io
-    And organization_id, project_id, experiment_id and api_key are present with empty values

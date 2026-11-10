@@ -263,7 +263,12 @@
   "terraform-kubernetes-codecarbon/variables": [],
   "terraform-kubernetes-codecarbon/versions": []
  },
- "retired": [],
+ "retired": [
+  "cluster-deployment.node-agent-rollout.001",
+  "cluster-deployment.node-agent-rollout.003",
+  "cluster-deployment.naming-and-labels.001",
+  "carbon-reporting.tracking-scope.002"
+ ],
  "scenarios": {
   "agent-image.image-selection.001": {
    "file": "specs/agent-image/image-selection/agent-image-selection.feature",
@@ -325,16 +330,6 @@
    "test": "",
    "tests": []
   },
-  "carbon-reporting.tracking-scope.002": {
-   "file": "specs/carbon-reporting/tracking-scope/configuring-carbon-reporting.feature",
-   "fingerprint": "658d00c5bf81",
-   "human": false,
-   "rule": "carbon-reporting.api-connection.defaults-to-public-service",
-   "source": "main.tf#locals",
-   "status": "inferred",
-   "test": "",
-   "tests": []
-  },
   "carbon-reporting.tracking-scope.003": {
    "file": "specs/carbon-reporting/tracking-scope/tracking-scope.feature",
    "fingerprint": "63cf693b6631",
@@ -365,41 +360,11 @@
    "test": "",
    "tests": []
   },
-  "cluster-deployment.naming-and-labels.001": {
-   "file": "specs/cluster-deployment/naming-and-labels/agent-naming.feature",
-   "fingerprint": "ac48863f2250",
-   "human": false,
-   "rule": "cluster-deployment.naming-and-labels.default-agent-name",
-   "source": "variables.tf#name",
-   "status": "inferred",
-   "test": "",
-   "tests": []
-  },
-  "cluster-deployment.node-agent-rollout.001": {
-   "file": "specs/cluster-deployment/node-agent-rollout/deploying-codecarbon-agent.feature",
-   "fingerprint": "658d00c5bf81",
-   "human": false,
-   "rule": "cluster-deployment.namespace-placement.stack-in-chosen-namespace",
-   "source": "main.tf#locals",
-   "status": "inferred",
-   "test": "",
-   "tests": []
-  },
   "cluster-deployment.node-agent-rollout.002": {
    "file": "specs/cluster-deployment/node-agent-rollout/deploying-codecarbon-agent.feature",
    "fingerprint": "658d00c5bf81",
    "human": false,
    "rule": "cluster-deployment.naming-and-labels.agent-named-and-selected-by-name",
-   "source": "main.tf#locals",
-   "status": "inferred",
-   "test": "",
-   "tests": []
-  },
-  "cluster-deployment.node-agent-rollout.003": {
-   "file": "specs/cluster-deployment/node-agent-rollout/deploying-codecarbon-agent.feature",
-   "fingerprint": "658d00c5bf81",
-   "human": false,
-   "rule": "agent-image.image-selection.agent-runs-chosen-image",
    "source": "main.tf#locals",
    "status": "inferred",
    "test": "",
