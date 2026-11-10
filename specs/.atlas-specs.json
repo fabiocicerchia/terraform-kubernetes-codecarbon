@@ -1,0 +1,628 @@
+{
+ "excluded": {
+  "examples/examples": [
+   {
+    "candidate": "The example requires Terraform >= 1.0 and the gavinbunney/kubectl provider >= 1.14",
+    "covered_by": "versions.tf declares the same constraints for the module (module-interface/compatibility)",
+    "reason": "TECH_INFRA",
+    "source": "examples/main.tf#terraform"
+   },
+   {
+    "candidate": "The example references the module by the relative path \"../\"",
+    "covered_by": "",
+    "reason": "TECH_DEVTOOLING",
+    "source": "examples/main.tf#codecarbon"
+   },
+   {
+    "candidate": "The example sets no image, so the agent runs the module's default image",
+    "covered_by": "agent-image/image-selection default image rule (owned by the root module)",
+    "reason": "DUPLICATE_OF",
+    "source": "examples/main.tf#codecarbon"
+   }
+  ],
+  "examples/outputs": [
+   {
+    "candidate": "daemonset_name is null when the deployment is disabled",
+    "covered_by": "module-interface.deployment-outputs (root module outputs; the example only passes the value through, and it is always enabled)",
+    "reason": "DUPLICATE_OF",
+    "source": "outputs.tf#output.daemonset_name"
+   },
+   {
+    "candidate": "Output description strings in the example",
+    "covered_by": "",
+    "reason": "TRIVIAL",
+    "source": "examples/outputs.tf"
+   },
+   {
+    "candidate": "The example reports where the agent runs, what it is called and whether it is enabled",
+    "covered_by": "",
+    "reason": "UNVERIFIABLE",
+    "source": "examples/outputs.tf#output.namespace"
+   },
+   {
+    "candidate": "The example does not report the rendered manifest",
+    "covered_by": "",
+    "reason": "UNVERIFIABLE",
+    "source": "examples/outputs.tf#output.enabled"
+   }
+  ],
+  "terraform-kubernetes-codecarbon/dockerfile": [
+   {
+    "candidate": "python:3.14-slim base image",
+    "covered_by": "",
+    "reason": "TECH_BUILD",
+    "source": "Dockerfile#FROM"
+   },
+   {
+    "candidate": "Maintainer and description labels on the image",
+    "covered_by": "",
+    "reason": "TECH_BUILD",
+    "source": "Dockerfile#LABEL"
+   },
+   {
+    "candidate": "gcc installed for the build and purged in the same layer, apt lists removed",
+    "covered_by": "",
+    "reason": "TECH_BUILD",
+    "source": "Dockerfile#RUN"
+   },
+   {
+    "candidate": "codecarbon installed with pip and no cache, as a single layer",
+    "covered_by": "",
+    "reason": "TECH_BUILD",
+    "source": "Dockerfile#RUN"
+   }
+  ],
+  "terraform-kubernetes-codecarbon/makefile": [
+   {
+    "candidate": "make setup installs the pre-commit hook",
+    "covered_by": "",
+    "reason": "TECH_BUILD",
+    "source": "Makefile#setup"
+   },
+   {
+    "candidate": "make install runs terraform init -backend=false to download pinned providers",
+    "covered_by": "",
+    "reason": "TECH_BUILD",
+    "source": "Makefile#install"
+   },
+   {
+    "candidate": "make lint runs pre-commit on every file",
+    "covered_by": "",
+    "reason": "TECH_BUILD",
+    "source": "Makefile#lint"
+   },
+   {
+    "candidate": "make format rewrites Terraform sources with terraform fmt -recursive",
+    "covered_by": "",
+    "reason": "TECH_BUILD",
+    "source": "Makefile#format"
+   },
+   {
+    "candidate": "make test hides terraform init output",
+    "covered_by": "",
+    "reason": "INTERNAL_MECHANISM",
+    "source": "Makefile#test"
+   },
+   {
+    "candidate": "help listing column alignment (%-10s)",
+    "covered_by": "",
+    "reason": "TRIVIAL",
+    "source": "Makefile#help"
+   }
+  ],
+  "terraform-kubernetes-codecarbon/outputs": [
+   {
+    "candidate": "Output descriptions text",
+    "covered_by": "",
+    "reason": "TRIVIAL",
+    "source": "outputs.tf"
+   },
+   {
+    "candidate": "manifest_yaml is not marked sensitive",
+    "covered_by": "module.outputs.manifest-reflects-bundled-template (bundled template holds no API key, so no secret is exposed today)",
+    "reason": "INTERNAL_MECHANISM",
+    "source": "outputs.tf#manifest_yaml"
+   }
+  ],
+  "terraform-kubernetes-codecarbon/terraform-kubernetes-codecarbon": [
+   {
+    "candidate": "Bundled YAML split into documents keyed by kind and name",
+    "covered_by": "",
+    "reason": "INTERNAL_MECHANISM",
+    "source": "main.tf#locals"
+   },
+   {
+    "candidate": "First DaemonSet and first Secret in the bundle are picked by key prefix",
+    "covered_by": "",
+    "reason": "INTERNAL_MECHANISM",
+    "source": "main.tf#locals"
+   },
+   {
+    "candidate": "Each manifest is re-encoded to YAML before applying",
+    "covered_by": "",
+    "reason": "INTERNAL_MECHANISM",
+    "source": "main.tf#kubectl_manifest.codecarbon"
+   },
+   {
+    "candidate": "Namespace keeps its managed-by: kubectl label",
+    "covered_by": "",
+    "reason": "TRIVIAL",
+    "source": "main.tf#locals"
+   },
+   {
+    "candidate": "Reporting values are written unquoted and unvalidated into the config file",
+    "covered_by": "",
+    "reason": "TRIVIAL",
+    "source": "main.tf#locals"
+   },
+   {
+    "candidate": "Privileged, host network/PID, /proc and /sys mounts, tolerations and resource limits of the agent",
+    "covered_by": "",
+    "reason": "TECH_INFRA",
+    "source": "codecarbon-daemonset.yaml"
+   },
+   {
+    "candidate": "A disabled deployment puts nothing on the cluster",
+    "covered_by": "",
+    "reason": "UNVERIFIABLE",
+    "source": "main.tf#kubectl_manifest.codecarbon"
+   },
+   {
+    "candidate": "Applying waits until the agent has rolled out to the nodes",
+    "covered_by": "",
+    "reason": "UNVERIFIABLE",
+    "source": "main.tf#kubectl_manifest.codecarbon"
+   },
+   {
+    "candidate": "The module's settings override conflicting changes made by other tools",
+    "covered_by": "",
+    "reason": "UNVERIFIABLE",
+    "source": "main.tf#kubectl_manifest.codecarbon"
+   },
+   {
+    "candidate": "The API key reaches the cluster only inside the configuration Secret",
+    "covered_by": "",
+    "reason": "UNVERIFIABLE",
+    "source": "main.tf#kubectl_manifest.codecarbon"
+   }
+  ],
+  "terraform-kubernetes-codecarbon/tflint": [
+   {
+    "candidate": "tflint runs the terraform plugin with the 'all' preset enabled",
+    "covered_by": "",
+    "reason": "TECH_BUILD",
+    "source": ".tflint.hcl#plugin \"terraform\""
+   },
+   {
+    "candidate": "Lint requires a required_version constraint and required_providers declarations",
+    "covered_by": "",
+    "reason": "TECH_BUILD",
+    "source": ".tflint.hcl#rule \"terraform_required_version\""
+   },
+   {
+    "candidate": "Lint requires every variable to be documented and typed",
+    "covered_by": "",
+    "reason": "TECH_BUILD",
+    "source": ".tflint.hcl#rule \"terraform_documented_variables\""
+   },
+   {
+    "candidate": "Lint requires every output to be documented",
+    "covered_by": "",
+    "reason": "TECH_BUILD",
+    "source": ".tflint.hcl#rule \"terraform_documented_outputs\""
+   },
+   {
+    "candidate": "Lint enforces snake_case naming for Terraform identifiers",
+    "covered_by": "",
+    "reason": "TECH_BUILD",
+    "source": ".tflint.hcl#rule \"terraform_naming_convention\""
+   },
+   {
+    "candidate": "Lint flags unused declarations",
+    "covered_by": "",
+    "reason": "TECH_BUILD",
+    "source": ".tflint.hcl#rule \"terraform_unused_declarations\""
+   },
+   {
+    "candidate": "Lint requires module sources to be pinned to a version",
+    "covered_by": "",
+    "reason": "TECH_BUILD",
+    "source": ".tflint.hcl#rule \"terraform_module_pinned_source\""
+   }
+  ],
+  "terraform-kubernetes-codecarbon/variables": [
+   {
+    "candidate": "Variable type constraints (bool for enabled, string for others)",
+    "covered_by": "",
+    "reason": "TRIVIAL",
+    "source": "variables.tf"
+   },
+   {
+    "candidate": "Variable descriptions shown in docs",
+    "covered_by": "",
+    "reason": "TECH_DEVTOOLING",
+    "source": "variables.tf"
+   },
+   {
+    "candidate": "Empty default api_key produces an agent with blank credentials",
+    "covered_by": "carbon-reporting.tracking-scope.ids-optional-left-blank",
+    "reason": "DUPLICATE_OF",
+    "source": "variables.tf#api_key"
+   }
+  ],
+  "terraform-kubernetes-codecarbon/versions": []
+ },
+ "lifted": {
+  "examples/examples": [],
+  "examples/outputs": [],
+  "terraform-kubernetes-codecarbon/dockerfile": [],
+  "terraform-kubernetes-codecarbon/makefile": [],
+  "terraform-kubernetes-codecarbon/outputs": [],
+  "terraform-kubernetes-codecarbon/terraform-kubernetes-codecarbon": [],
+  "terraform-kubernetes-codecarbon/tflint": [],
+  "terraform-kubernetes-codecarbon/variables": [],
+  "terraform-kubernetes-codecarbon/versions": []
+ },
+ "retired": [
+  "cluster-deployment.node-agent-rollout.001",
+  "cluster-deployment.node-agent-rollout.003",
+  "cluster-deployment.naming-and-labels.001",
+  "carbon-reporting.tracking-scope.002"
+ ],
+ "scenarios": {
+  "agent-image.image-selection.001": {
+   "file": "specs/agent-image/image-selection/agent-image-selection.feature",
+   "fingerprint": "23b15d7cce74",
+   "human": false,
+   "rule": "agent-image.image-selection.default-published-image",
+   "source": "variables.tf#image",
+   "status": "inferred",
+   "test": "",
+   "tests": []
+  },
+  "agent-image.monitor-startup.001": {
+   "file": "specs/agent-image/monitor-startup/agent-image-runtime.feature",
+   "fingerprint": "218b491d746e",
+   "human": false,
+   "rule": "agent-image.startup.monitors-by-default",
+   "source": "Dockerfile#CMD",
+   "status": "inferred",
+   "test": "",
+   "tests": []
+  },
+  "agent-image.monitor-startup.002": {
+   "file": "specs/agent-image/monitor-startup/agent-image-runtime.feature",
+   "fingerprint": "0386e975c2d5",
+   "human": false,
+   "rule": "agent-image.security.runtime-user",
+   "source": "Dockerfile#RUN",
+   "status": "inferred",
+   "test": "",
+   "tests": []
+  },
+  "carbon-reporting.api-connection.001": {
+   "file": "specs/carbon-reporting/api-connection/api-connection.feature",
+   "fingerprint": "eb7c46162bef",
+   "human": false,
+   "rule": "carbon-reporting.api-connection.default-public-endpoint",
+   "source": "variables.tf#api_endpoint",
+   "status": "inferred",
+   "test": "",
+   "tests": []
+  },
+  "carbon-reporting.credentials.001": {
+   "file": "specs/carbon-reporting/credentials/api-credentials.feature",
+   "fingerprint": "f863e818298f",
+   "human": false,
+   "rule": "carbon-reporting.credentials.api-key-sensitive",
+   "source": "variables.tf#api_key",
+   "status": "inferred",
+   "test": "",
+   "tests": []
+  },
+  "carbon-reporting.tracking-scope.001": {
+   "file": "specs/carbon-reporting/tracking-scope/configuring-carbon-reporting.feature",
+   "fingerprint": "658d00c5bf81",
+   "human": false,
+   "rule": "carbon-reporting.tracking-scope.config-file-carries-scope",
+   "source": "main.tf#locals",
+   "status": "inferred",
+   "test": "",
+   "tests": []
+  },
+  "carbon-reporting.tracking-scope.003": {
+   "file": "specs/carbon-reporting/tracking-scope/tracking-scope.feature",
+   "fingerprint": "63cf693b6631",
+   "human": false,
+   "rule": "carbon-reporting.tracking-scope.ids-optional-left-blank",
+   "source": "variables.tf#organization_id",
+   "status": "inferred",
+   "test": "",
+   "tests": []
+  },
+  "cluster-deployment.enable-toggle.001": {
+   "file": "specs/cluster-deployment/enable-toggle/enable-toggle.feature",
+   "fingerprint": "4e5862e37ec6",
+   "human": false,
+   "rule": "cluster-deployment.enable-toggle.on-unless-disabled",
+   "source": "variables.tf#enabled",
+   "status": "inferred",
+   "test": "",
+   "tests": []
+  },
+  "cluster-deployment.namespace-placement.001": {
+   "file": "specs/cluster-deployment/namespace-placement/namespace-placement.feature",
+   "fingerprint": "78713484a50f",
+   "human": false,
+   "rule": "cluster-deployment.namespace-placement.default-codecarbon-namespace",
+   "source": "variables.tf#namespace",
+   "status": "inferred",
+   "test": "",
+   "tests": []
+  },
+  "cluster-deployment.node-agent-rollout.002": {
+   "file": "specs/cluster-deployment/node-agent-rollout/deploying-codecarbon-agent.feature",
+   "fingerprint": "658d00c5bf81",
+   "human": false,
+   "rule": "cluster-deployment.naming-and-labels.agent-named-and-selected-by-name",
+   "source": "main.tf#locals",
+   "status": "inferred",
+   "test": "",
+   "tests": []
+  },
+  "developer-tooling.task-commands.001": {
+   "file": "specs/developer-tooling/task-commands/make-verbs.feature",
+   "fingerprint": "517de792f113",
+   "human": false,
+   "rule": "tooling.make.bare-make-lists-verbs",
+   "source": "Makefile#help",
+   "status": "inferred",
+   "test": "",
+   "tests": []
+  },
+  "developer-tooling.task-commands.002": {
+   "file": "specs/developer-tooling/task-commands/make-verbs.feature",
+   "fingerprint": "4d16ff5f8f37",
+   "human": false,
+   "rule": "tooling.make.not-applicable-verbs-explain-themselves",
+   "source": "Makefile#build",
+   "status": "inferred",
+   "test": "",
+   "tests": []
+  },
+  "developer-tooling.task-commands.003": {
+   "file": "specs/developer-tooling/task-commands/make-verbs.feature",
+   "fingerprint": "c5311b237c3f",
+   "human": false,
+   "rule": "tooling.make.analyze-refuses-without-tflint",
+   "source": "Makefile#analyze",
+   "status": "inferred",
+   "test": "",
+   "tests": []
+  },
+  "developer-tooling.task-commands.004": {
+   "file": "specs/developer-tooling/task-commands/make-verbs.feature",
+   "fingerprint": "8145e195cde0",
+   "human": false,
+   "rule": "tooling.make.test-validates-module-and-example",
+   "source": "Makefile#test",
+   "status": "inferred",
+   "test": "",
+   "tests": []
+  },
+  "module-interface.compatibility.001": {
+   "file": "specs/module-interface/compatibility/module-compatibility.feature",
+   "fingerprint": "171cb2f3b7dd",
+   "human": false,
+   "rule": "module.compatibility.minimum-cli-version",
+   "source": "versions.tf#terraform",
+   "status": "inferred",
+   "test": "",
+   "tests": []
+  },
+  "module-interface.compatibility.002": {
+   "file": "specs/module-interface/compatibility/module-compatibility.feature",
+   "fingerprint": "171cb2f3b7dd",
+   "human": false,
+   "rule": "module.compatibility.kubectl-provider-requirement",
+   "source": "versions.tf#terraform",
+   "status": "inferred",
+   "test": "",
+   "tests": []
+  },
+  "module-interface.deployment-outputs.001": {
+   "file": "specs/module-interface/deployment-outputs/deployment-outputs.feature",
+   "fingerprint": "11a6957c3c13",
+   "human": false,
+   "rule": "module.outputs.report-deployed-agent",
+   "source": "outputs.tf#daemonset_name",
+   "status": "inferred",
+   "test": "",
+   "tests": []
+  },
+  "module-interface.deployment-outputs.002": {
+   "file": "specs/module-interface/deployment-outputs/deployment-outputs.feature",
+   "fingerprint": "11a6957c3c13",
+   "human": false,
+   "rule": "module.outputs.disabled-reports-no-agent",
+   "source": "outputs.tf#daemonset_name",
+   "status": "inferred",
+   "test": "",
+   "tests": []
+  },
+  "module-interface.deployment-outputs.003": {
+   "file": "specs/module-interface/deployment-outputs/deployment-outputs.feature",
+   "fingerprint": "251e0c428868",
+   "human": false,
+   "rule": "module.outputs.namespace-reported-when-disabled",
+   "source": "outputs.tf#namespace",
+   "status": "inferred",
+   "test": "",
+   "tests": []
+  },
+  "module-interface.deployment-outputs.004": {
+   "file": "specs/module-interface/deployment-outputs/deployment-outputs.feature",
+   "fingerprint": "3489d212f5fe",
+   "human": false,
+   "rule": "module.outputs.manifest-reflects-bundled-template",
+   "source": "outputs.tf#manifest_yaml",
+   "status": "inferred",
+   "test": "",
+   "tests": []
+  },
+  "module-interface.usage-example.001": {
+   "file": "specs/module-interface/usage-example/usage-example.feature",
+   "fingerprint": "fdd968b1501b",
+   "human": false,
+   "rule": "module.usage-example.deploys-agent-to-public-api",
+   "source": "examples/main.tf#codecarbon",
+   "status": "inferred",
+   "test": "",
+   "tests": []
+  },
+  "module-interface.usage-example.002": {
+   "file": "specs/module-interface/usage-example/usage-example.feature",
+   "fingerprint": "fdd968b1501b",
+   "human": false,
+   "rule": "module.usage-example.placeholder-credentials-applied-verbatim",
+   "source": "examples/main.tf#codecarbon",
+   "status": "inferred",
+   "test": "",
+   "tests": []
+  },
+  "module-interface.usage-example.003": {
+   "file": "specs/module-interface/usage-example/usage-example.feature",
+   "fingerprint": "2b59015b53db",
+   "human": false,
+   "rule": "module.usage-example.surfaces-deployment-outputs",
+   "source": "examples/outputs.tf#namespace",
+   "status": "inferred",
+   "test": "",
+   "tests": []
+  }
+ },
+ "taxonomy": {
+  "domains": [
+   {
+    "areas": [
+     {
+      "description": "Runs the CodeCarbon agent as a DaemonSet on each node and waits for the rollout to finish.",
+      "slug": "node-agent-rollout",
+      "title": "Node agent rollout"
+     },
+     {
+      "description": "Creates and targets the Kubernetes namespace the monitoring stack lives in.",
+      "slug": "namespace-placement",
+      "title": "Namespace placement"
+     },
+     {
+      "description": "Applies the chosen name and standard app labels consistently to the agent, its pods and selectors.",
+      "slug": "naming-and-labels",
+      "title": "Naming and labels"
+     },
+     {
+      "description": "Switches the whole deployment on or off without removing the module call.",
+      "slug": "enable-toggle",
+      "title": "Enable toggle"
+     },
+     {
+      "description": "Loads the bundled manifests, applies overrides and pushes them to the cluster with server-side apply.",
+      "slug": "manifest-application",
+      "title": "Manifest application"
+     }
+    ],
+    "description": "Rolling the CodeCarbon monitoring agent out to every node of a Kubernetes cluster.",
+    "slug": "cluster-deployment",
+    "title": "Cluster Deployment"
+   },
+   {
+    "areas": [
+     {
+      "description": "Points the agent at a CodeCarbon API endpoint, defaulting to the public service.",
+      "slug": "api-connection",
+      "title": "API connection"
+     },
+     {
+      "description": "Attributes measurements to an organization, project and experiment.",
+      "slug": "tracking-scope",
+      "title": "Tracking scope"
+     },
+     {
+      "description": "Stores the API key and generated configuration file in a Kubernetes Secret, treated as sensitive.",
+      "slug": "credentials",
+      "title": "Credentials"
+     }
+    ],
+    "description": "Connecting the agent to the CodeCarbon service so emissions are tracked against the right account.",
+    "slug": "carbon-reporting",
+    "title": "Carbon Reporting"
+   },
+   {
+    "areas": [
+     {
+      "description": "Builds a slim Python image with CodeCarbon installed, build tools removed and a non-root user.",
+      "slug": "image-build",
+      "title": "Image build"
+     },
+     {
+      "description": "Lets users choose which container image the agent runs, with a published default.",
+      "slug": "image-selection",
+      "title": "Image selection"
+     },
+     {
+      "description": "Starts CodeCarbon in continuous monitoring mode when the container launches.",
+      "slug": "monitor-startup",
+      "title": "Monitor startup"
+     }
+    ],
+    "description": "The container image that runs CodeCarbon monitoring on each node.",
+    "slug": "agent-image",
+    "title": "Agent Image"
+   },
+   {
+    "areas": [
+     {
+      "description": "Reports the namespace, agent name, enabled state and rendered manifest after apply.",
+      "slug": "deployment-outputs",
+      "title": "Deployment outputs"
+     },
+     {
+      "description": "A ready-to-copy root module showing how to call the module and surface its outputs.",
+      "slug": "usage-example",
+      "title": "Usage example"
+     },
+     {
+      "description": "Declares the supported Terraform/OpenTofu versions and the kubectl provider requirement.",
+      "slug": "compatibility",
+      "title": "Compatibility"
+     }
+    ],
+    "description": "How users consume the Terraform module and what it tells them back.",
+    "slug": "module-interface",
+    "title": "Module Interface"
+   },
+   {
+    "areas": [
+     {
+      "description": "Standard make verbs for setup, install, format, help and declared not-applicable steps.",
+      "slug": "task-commands",
+      "title": "Task commands"
+     },
+     {
+      "description": "Validates the module and its example configuration with Terraform.",
+      "slug": "validation",
+      "title": "Validation"
+     },
+     {
+      "description": "Enforces documented, typed, snake_case and pinned Terraform code via tflint and pre-commit.",
+      "slug": "linting-rules",
+      "title": "Linting rules"
+     }
+    ],
+    "description": "Local commands and quality gates for maintaining the module.",
+    "slug": "developer-tooling",
+    "title": "Developer Tooling"
+   }
+  ]
+ }
+}
